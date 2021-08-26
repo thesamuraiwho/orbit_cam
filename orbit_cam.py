@@ -11,9 +11,10 @@ from mathutils import Vector
 objects = bpy.data.objects
 
 
-bpy.ops.object.add(radius=1.0, type='EMPTY', enter_editmode=False, 
-    align='CURSOR', location=(0.0, 0.0, 0.0), rotation=(0.0, 0.0, 0.0), scale=(0.0, 0.0, 0.0))
+bpy.ops.object.add(radius=1.0, type='EMPTY', enter_editmode=False, align='CURSOR', 
+    location=(0.0, 0.0, 0.0), rotation=(0.0, 0.0, 0.0), scale=(0.0, 0.0, 0.0))
 bpy.context.active_object.name = 'controller'
+bpy.data.objects['controller'].scale = (1, 1, 1)
 bpy.ops.object.camera_add(enter_editmode=False, align='CURSOR', 
     location=(0.0, 0.0, 0.0), rotation=(0.0, 0.0, 0.0), scale=(0.0, 0.0, 0.0))
 bpy.context.active_object.name = 'cam'
@@ -22,13 +23,57 @@ bpy.context.active_object.location = (radians(90.0), 0.0, radians(90.0))
 bpy.context.active_object.location = Vector((bpy.data.objects['controller'].location[0] + 10, 0, 0))
 
 print(bpy.context.scene.camera)
-
+print(type(bpy.context.active_object))
 bpy.context.scene.camera = bpy.context.active_object # Set the created camera to the Scene (active) Camera
 
 # Make the camera's parent the controller
 a = objects['controller']
 b = objects['cam']
 b.parent = a
+
+#default_cube = bpy.data.objects['Cube']
+## X, Y, and Z location to set
+#default_cube.location = (0.0, 0.0, 0.0)
+## Set the keyframe with that location, and which frame.
+#default_cube.keyframe_insert(data_path="location", frame=1)
+
+## do it again!
+#default_cube.location = (3.0, 2.0, 1.0)
+## setting it for frame 10
+#default_cube.keyframe_insert(data_path="location", frame=10)
+
+
+bpy.ops.mesh.primitive_monkey_add()
+bpy.context.active_object.name = 'monkey'
+monkey = bpy.data.objects['monkey']
+print(type(monkey))
+# X, Y, and Z location to set
+monkey.rotation_euler = (0.0, 0.0, 0.0)
+# Set the keyframe with that location, and which frame.
+monkey.keyframe_insert(data_path="rotation_euler", frame=1)
+
+# do it again!
+monkey.rotation_euler = (0.0, 0.0, radians(180.0))
+# setting it for frame 10
+monkey.keyframe_insert(data_path="rotation_euler", frame=15)
+
+monkey.rotation_euler = (0.0, 0.0, radians(360.0))
+# setting it for frame 10 
+monkey.keyframe_insert(data_path="rotation_euler", frame=30)
+
+# Delete a specific object if it exists by name
+def delete_obj_by_name(name):
+    bpy.ops.object.select_all(action='DESELECT')
+    print(type(bpy.data.objects))
+    if name in bpy.data.objects.keys():
+        bpy.data.objects[name].select_set(True)
+    bpy.ops.object.delete()
+
+bpy.ops.object.select_all(action='DESELECT')
+print(type(bpy.data.objects))
+if 'Cube' in bpy.data.objects.keys():
+    bpy.data.objects['Cube'].select_set(True)
+bpy.ops.object.delete()
 
 #cam.rotation = (radians(-180.0), 0.0, 0.0)
 
