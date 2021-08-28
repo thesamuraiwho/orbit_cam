@@ -8,12 +8,39 @@ import bpy
 from math import radians
 from mathutils import Vector
 
-objects = bpy.data.objects
+# Delete a specific object if it exists by name
+def delete_obj_by_name(name):
+    bpy.ops.object.select_all(action='DESELECT')
+    print(type(bpy.data.objects))
+    if name in bpy.data.objects.keys():
+        bpy.data.objects[name].select_set(True)
+    bpy.ops.object.delete()
 
+# parent an object
+def parent_obj(parent, child):
+    a = parent
+    b = child
+    child.parent = a
+    
+
+
+objects = bpy.data.objects
+collections = bpy.data.collections
+
+print(collections)
+
+bpy.ops.collection.create(name='orbit-cam') # Create a collection for the cameras
+bpy.context.scene.collection.children.link(bpy.data.collections['orbit-cam'])
 
 bpy.ops.object.add(radius=1.0, type='EMPTY', enter_editmode=False, align='CURSOR', 
     location=(0.0, 0.0, 0.0), rotation=(0.0, 0.0, 0.0), scale=(0.0, 0.0, 0.0))
 bpy.context.active_object.name = 'controller'
+bpy.data.collections['orbit-cam'].objects.link(bpy.context.active_object)
+
+## print all objects
+#for obj in bpy.data.objects:
+#    print(obj.name)
+
 bpy.data.objects['controller'].scale = (1, 1, 1)
 bpy.ops.object.camera_add(enter_editmode=False, align='CURSOR', 
     location=(0.0, 0.0, 0.0), rotation=(0.0, 0.0, 0.0), scale=(0.0, 0.0, 0.0))
@@ -26,10 +53,12 @@ print(bpy.context.scene.camera)
 print(type(bpy.context.active_object))
 bpy.context.scene.camera = bpy.context.active_object # Set the created camera to the Scene (active) Camera
 
-# Make the camera's parent the controller
-a = objects['controller']
-b = objects['cam']
-b.parent = a
+## Make the camera's parent the controller
+#a = objects['controller']
+#b = objects['cam']
+#b.parent = a
+
+parent_obj(objects['controller'], objects['cam'])
 
 #default_cube = bpy.data.objects['Cube']
 ## X, Y, and Z location to set
@@ -43,31 +72,37 @@ b.parent = a
 #default_cube.keyframe_insert(data_path="location", frame=10)
 
 
-bpy.ops.mesh.primitive_monkey_add()
-bpy.context.active_object.name = 'monkey'
-monkey = bpy.data.objects['monkey']
-print(type(monkey))
-# X, Y, and Z location to set
-monkey.rotation_euler = (0.0, 0.0, 0.0)
-# Set the keyframe with that location, and which frame.
-monkey.keyframe_insert(data_path="rotation_euler", frame=1)
+#bpy.ops.mesh.primitive_monkey_add()
+#bpy.context.active_object.name = 'monkey'
+#monkey = bpy.data.objects['monkey']
+#print(type(monkey))
+## X, Y, and Z location to set
+#monkey.rotation_euler = (0.0, 0.0, 0.0)
+## Set the keyframe with that location, and which frame.
+#monkey.keyframe_insert(data_path="rotation_euler", frame=1)
 
-# do it again!
-monkey.rotation_euler = (0.0, 0.0, radians(180.0))
-# setting it for frame 10
-monkey.keyframe_insert(data_path="rotation_euler", frame=15)
+## do it again!
+#monkey.rotation_euler = (0.0, 0.0, radians(180.0))
+## setting it for frame 10
+#monkey.keyframe_insert(data_path="rotation_euler", frame=15)
 
-monkey.rotation_euler = (0.0, 0.0, radians(360.0))
-# setting it for frame 10 
-monkey.keyframe_insert(data_path="rotation_euler", frame=30)
+#monkey.rotation_euler = (0.0, 0.0, radians(360.0))
+## setting it for frame 10 
+#monkey.keyframe_insert(data_path="rotation_euler", frame=30)
 
-# Delete a specific object if it exists by name
-def delete_obj_by_name(name):
-    bpy.ops.object.select_all(action='DESELECT')
-    print(type(bpy.data.objects))
-    if name in bpy.data.objects.keys():
-        bpy.data.objects[name].select_set(True)
-    bpy.ops.object.delete()
+controller = bpy.data.objects['controller']
+controller.rotation_euler = (0.0, 0.0, 0.0)
+controller.keyframe_insert(data_path="rotation_euler", frame=1)
+controller.rotation_euler = (0.0, 0.0, radians(180.0))
+controller.keyframe_insert(data_path="rotation_euler", frame=15)
+controller.rotation_euler = (0.0, 0.0, radians(360.0))
+controller.keyframe_insert(data_path="rotation_euler", frame=30)
+
+obj = controller
+fcurves = obj.animation_data.action.fcurves
+for fcurve in fcurves:
+    for kf in fcurve.keyframe_points:
+        kf.interpolation = 'LINEAR'
 
 bpy.ops.object.select_all(action='DESELECT')
 print(type(bpy.data.objects))
