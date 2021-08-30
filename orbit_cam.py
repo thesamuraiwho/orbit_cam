@@ -31,49 +31,11 @@ def display_data():
     for col in bpy.data.collections:
         print(collection.name)
 
-#objects = bpy.data.objects
-
-#bpy.ops.collection.create(name='orbit-cam') # Create a collection for the cameras
-#bpy.context.scene.collection.children.link(bpy.data.collections['orbit-cam'])
-#bpy.ops.object.add(radius=1.0, type='EMPTY', enter_editmode=False, align='CURSOR', 
-#    location=(0.0, 0.0, 0.0), rotation=(0.0, 0.0, 0.0), scale=(0.0, 0.0, 0.0))
-#bpy.context.active_object.name = 'controller'
-#bpy.ops.object.collection_link(collection='orbit-cam')
-
-
-#bpy.data.objects['controller'].scale = (1, 1, 1)
-#bpy.ops.object.camera_add(enter_editmode=False, align='CURSOR', 
-#    location=(0.0, 0.0, 0.0), rotation=(0.0, 0.0, 0.0), scale=(0.0, 0.0, 0.0))
-#bpy.context.active_object.name = 'cam'
-#bpy.context.active_object.rotation_euler = (radians(90.0), 0.0, radians(90.0))
-#bpy.context.active_object.location = (radians(90.0), 0.0, radians(90.0))
-#bpy.context.active_object.location = Vector((bpy.data.objects['controller'].location[0] + 10, 0, 0))
-
-#bpy.context.scene.camera = bpy.context.active_object # Set the created camera to the Scene (active) Camera
-
-#parent_obj(objects['controller'], objects['cam'])
-
-#controller = bpy.data.objects['controller']
-#controller.rotation_euler = (0.0, 0.0, 0.0)
-#controller.keyframe_insert(data_path="rotation_euler", frame=1)
-#controller.rotation_euler = (0.0, 0.0, radians(180.0))
-#controller.keyframe_insert(data_path="rotation_euler", frame=15)
-#controller.rotation_euler = (0.0, 0.0, radians(360.0))
-#controller.keyframe_insert(data_path="rotation_euler", frame=30)
-
-#obj = controller
-#fcurves = obj.animation_data.action.fcurvesa
-#for fcurve in fcurves:
-#    for kf in fcurve.keyframe_points:
-#        kf.interpolation = 'LINEAR'
-
 class ObjectOrbitCam(bpy.types.Operator):
     """Object Orbit Cam"""
     bl_idname = "object.orbit_cam"
     bl_label = "Orbit Cam"
     bl_options = {'REGISTER', 'UNDO'}
-
-#    total: bpy.props.IntProperty(name="Steps", default=2, min=1, max=100)
 
     def execute(self, context):
         scene = context.scene # Get the current scene
@@ -91,7 +53,6 @@ class ObjectOrbitCam(bpy.types.Operator):
                 location=(0.0, 0.0, 0.0), rotation=(0.0, 0.0, 0.0), scale=(0.0, 0.0, 0.0))
             bpy.context.active_object.name = 'controller'
             bpy.ops.object.collection_link(collection='orbit-cam')
-
 
             bpy.data.objects['controller'].scale = (1, 1, 1)
             bpy.ops.object.camera_add(enter_editmode=False, align='CURSOR', 
